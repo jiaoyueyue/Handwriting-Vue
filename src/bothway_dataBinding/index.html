@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>01-手写双向数据绑定</title>
-    <script src="../../vue.js"></script>
+    <!-- <script src="../../vue.js"></script> -->
+    <script type="text/javascript" src="./myvue.js"></script>
 </head>
 <body>
     <div id="app">
@@ -24,12 +25,12 @@
     </div>
 
     <script type="text/javascript">
-        let vm = new Vue({
+        let vm = new Myvue({
             el: '#app',
             data: {
                 person: {
                     name: '番茄炒鸡蛋',
-                    age: 15, 
+                    age: 15,
                     sex: 'women'
                 },
                 msg: '学习mvvm实现原理',
@@ -40,7 +41,6 @@
                     console.log(this.msg);
                 }
             }
-
         })
     </script>
 

@@ -14,7 +14,7 @@ const compileUtils = {
         return expr.split('.').reduce((data, currentVal) => {
             return data[currentVal];
         }, vm.$data);
-     },
+    },
 
      // input双向数据绑定
     setValue(expr, vm, inputVal) {
@@ -57,3 +57,11 @@ const compileUtils = {
         this.upDater.textUpDater(node, value);
     }
 };
+
+export default Myvue {
+    constructor(options) {
+        this.$el = options.el;
+        this.$data = options.data;
+        this.$options 
+    }
+}
