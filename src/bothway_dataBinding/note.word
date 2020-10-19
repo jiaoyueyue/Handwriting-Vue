@@ -1,0 +1,22 @@
+1. 实现数据绑定的做法有大致如下几种：
+    发布-订阅者模式（backbone.js)
+    脏值检查（angular.js)
+    数据劫持(Vue.js)
+
+1.1 发布者-订阅者模式
+    一般是通过sub、pub的方式来实现数据和试图的绑定监听，更新数据方法通常做法是vm.set('propertyName', value)这种方式不太好
+    我们更希望通过vm.property = value这种方式更新数据，同时自动更新视图，于是有以下两种方式
+
+1.2 脏值检查
+    angular.js是通过脏值检测的方式对比数据是否有变更，来决定是否更新视图，最简单的方式就是通过setInterval（）定时轮询检测数据变动
+    当然Google不会这么low，angular只有在指定的事件触发时进入脏值检测，大致如下： 
+        *DOM事件，譬如用户输入文本，点击按钮等（ng-click）
+        *XHR响应事件（$http)
+        *浏览器location变更事件（$location）
+        *Timer事件（$timeout, $interval)
+        *执行$diaest()或¥apply()
+
+1.3 数据劫持
+    Vue.js通过数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter、getter，在数据变动时发布消息
+    给订阅者，触发相应的监听回调
+    

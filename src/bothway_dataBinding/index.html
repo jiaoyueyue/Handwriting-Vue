@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01-手写双向数据绑定</title>
+    <script src="../../vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h2>{{person.name}} -- {{person.age}}</h2>
+        <h3>{{person.sex}}</h3>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+        <div>{{msg}}</div>
+        <div v-text="person.name"></div>
+        <div v-html="htmlStr"></div>
+        <input type="text" v-model="msg"/>
+        <button type="button" v-on:click="btnClick">v-on：事件</button>
+        <button type="button" @click="btnClick">@事件</button>
+    </div>
+
+    <script type="text/javascript">
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                person: {
+                    name: '番茄炒鸡蛋',
+                    age: 15, 
+                    sex: 'women'
+                },
+                msg: '学习mvvm实现原理',
+                htmlStr: '<h1>我是html指令渲染</h1>'
+            },
+            methods: {
+                btnClick() {
+                    console.log(this.msg);
+                }
+            }
+
+        })
+    </script>
+
+</body>
+</html>
