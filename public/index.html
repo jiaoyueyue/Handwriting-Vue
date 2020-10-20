@@ -9,7 +9,15 @@
     <script src="/dist/umb/vue.js"></script>
     <script>
         let vm = new Vue({
-            el: '#app'
+            el: '#app',
+            data() {
+                return {
+                    name: 'zhangsan',
+                    age: 12
+                }
+            },
+            computed() {},
+            watch() {}
         });
     </script>
 </body>
