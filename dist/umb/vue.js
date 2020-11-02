@@ -53,16 +53,79 @@
   function isObject(data) {
     return _typeof(data) === 'object' && data !== null;
   }
+  function def(data, key, value) {
+    Object.defineProperty(data, key, {
+      enumerable: false,
+      configurable: false,
+      value: value
+    });
+  }
+
+  /**
+   * @file 重写array的push、shift、unshift、 pop、 reverse等会使原数组发生变化的方法
+   */
+  var oldArrayMethods = Array.prototype;
+  var arrayMethods = Object.create(oldArrayMethods); // 需要重写的方法
+
+  var methods = ['push', 'pop', 'shift', 'unshift', 'sort', 'splice', 'reverse'];
+  methods.forEach(function (method) {
+    arrayMethods[method] = function () {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      // console.log('调用了push');
+      var result = oldArrayMethods[method].apply(this, args); // 调用原生的数组方法
+
+      var inserted; // 用户当前插入的元素,插入的元素可能是对象或数组，需要进行监控
+
+      var ob = this.__ob__;
+
+      switch (method) {
+        case 'push':
+        case 'unshift':
+          inserted = args;
+          break;
+
+        case 'splice':
+          inserted = args.slice(2);
+      }
+
+      if (inserted) {
+        ob.observeArray(inserted);
+      }
+
+      return result;
+    };
+  });
 
   var Observer = /*#__PURE__*/function () {
     function Observer(value) {
       _classCallCheck(this, Observer);
 
+      def(value, '__ob__', this); // 给每一个监控过的对象增加不可枚举属性‘__ob__’，方便为监控的对象增加方法，以及判断对象是否被监控
       // 如果数据的层次过多，需要递归的去解析对象中的属性，依次增加set和get方法
-      this.walk(value);
+
+      if (Array.isArray(value)) {
+        // 如果是数组，不对索引进行监控，因为会导致性能问题
+        // 前端开发中很少会操作数组的索引，而是去操作push、shift、unshift
+        value.__proto__ = arrayMethods; // 如果数组中的item是对象再进行监控
+
+        this.observeArray(value);
+      } else {
+        // 对对象进行监控
+        this.walk(value);
+      }
     }
 
     _createClass(Observer, [{
+      key: "observeArray",
+      value: function observeArray(value) {
+        for (var i = 0; i < value.length; i++) {
+          observe(value[i]);
+        }
+      }
+    }, {
       key: "walk",
       value: function walk(data) {
         var keys = Object.keys(data);
@@ -88,8 +151,8 @@
         }
 
         observe(newValue); // 继续劫持用户设置的值，因为有可能用户设置的值是一个对象
+        // console.log('值发生了变化')
 
-        console.log('值发生了变化');
         value = newValue;
       }
     });

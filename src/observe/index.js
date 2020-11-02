@@ -3,12 +3,33 @@
  * @param {Objec} data
  */
 
-import {isObject} from '../utils/index';
+import {isObject, def} from '../utils/index';
+import {arrayMethods} from '../utils/array.js';
 
 class Observer {
     constructor(value) {
-    // 如果数据的层次过多，需要递归的去解析对象中的属性，依次增加set和get方法
-        this.walk(value);
+        def(value, '__ob__', this); // 给每一个监控过的对象增加不可枚举属性‘__ob__’，方便为监控的对象增加方法，以及判断对象是否被监控
+
+        // 如果数据的层次过多，需要递归的去解析对象中的属性，依次增加set和get方法
+        if (Array.isArray(value)) {
+            // 如果是数组，不对索引进行监控，因为会导致性能问题
+            // 前端开发中很少会操作数组的索引，而是去操作push、shift、unshift
+            value.__proto__ = arrayMethods;
+
+            // 如果数组中的item是对象再进行监控
+            this.observeArray(value);
+
+        } else {
+            // 对对象进行监控
+            this.walk(value);
+        }
+    }
+
+    observeArray(value) {
+        for (let i = 0; i < value.length; i++) {
+            observe(value[i]);
+        }
+
     }
 
     walk(data) {
@@ -30,7 +51,7 @@ function defineReactive(data, key, value) {
                 return;
             }
             observe(newValue); // 继续劫持用户设置的值，因为有可能用户设置的值是一个对象
-            console.log('值发生了变化')
+            // console.log('值发生了变化')
             value = newValue;
         }
     });

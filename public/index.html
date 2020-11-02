@@ -11,18 +11,32 @@
         let vm = new Vue({
             el: '#app',
             data() {
+                // return {
+                //     name: 'zhangsan',
+                //     age: 12,
+                //     address: {
+                //         email: 'xxxxxx',
+                //         number: 423234223412
+                //     }
+                // };
                 return {
-                    name: 'zhangsan',
-                    age: 12,
-                    address: {
-                        email: 'xxxxxx',
-                        number: 423234223412
-                    }
-                };
+                    member: [
+                        {
+                            name: '张三',
+                            sex: 'man'
+                        },
+                        {
+                            name: '露丝',
+                            sex: 'woman'
+                        }
+                    ]
+                }
             },
             computed() {},
             watch() {}
         });
+        vm._data.member.push({name: 'xiaohua', sex: 'woman'});
+        console.log(vm._data);
     </script>
 </body>
 </html>
